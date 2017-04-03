@@ -14,6 +14,9 @@
         }
     }
 
+    $CI = & get_instance();
+    $CI->load->model('payment_methods/mdl_payment_methods');
+    $payment = $this->mdl_payment_methods->get_name_by_id($invoice->payment_method);
 ?>
 <html lang="<?php echo trans('cldr'); ?>">
 <head>
@@ -113,7 +116,7 @@
     <div id="th-payment-details">
         <div class="row clearfix">
             <div class="label-inline">Pagamento</div>
-            <div class="content-after-label">Bonifico Bancario</div>
+            <div class="content-after-label"><?php echo $payment; ?></div>
         </div>
 
         <div class="row clearfix">

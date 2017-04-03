@@ -42,4 +42,8 @@ class Mdl_Payment_Methods extends Response_Model
         );
     }
 
+    public function get_name_by_id($method_id){
+        return $this->db->query("SELECT * FROM $this->table WHERE $this->primary_key = $method_id")->row()->payment_method_name;
+    }
+
 }
