@@ -31,13 +31,66 @@
 
     
     <div id="company">
-        <div><b><span class="logo-red">THERMOCLIMA S.N.C.</span> di <span class="logo-blue">PESSOTTO GIUSEPPE & C.</span></b></div>
+        <div><b><span class="logo-red">THERMOCLIMA S.N.C. d</span><span class="logo-blue">i PESSOTTO GIUSEPPE & C.</span></b></div>
         <div><span class="logo-red">RISCALDAMENTO</span> – <span class="logo-blue">CONDIZIONAMENTO</span></div>
         <div><span class="small-text">Sede Legale: </span><span class="logo-red">Via Repubblica 25/3</span><span class="logo-blue"> 31020 SAN POLO DI PIAVE (TV)</span></div>
         <div><span class="small-text">Sede Operativa: </span><span class="logo-red">VIA LIBERAZIO</span><span class="logo-blue">NE 100 - 31028 VAZZOLA (TV)</span></div>
         <div><span class="logo-red">Reg. Impr. di TV / C</span><span class="logo-blue">.F.e P.I. 02489580262</span></div>
         <div><span class="logo-red">email: info@the</span><span class="logo-blue">rmoclimacaldaie.it</span></div>
         <div><span class="logo-red">www.thermo</span><span class="logo-blue">climacaldaie.it</span></div>
+
+    </div>
+    
+    <div class="clearfix"></div>
+    <br>
+    <br>
+
+    <div id="client">
+        <span class="th-small-title">Spett.le ditta</span>
+        <div>
+            <b><?php echo $invoice->client_name; ?></b>
+        </div>
+        <?php
+
+
+        if ($invoice->client_address_1) {
+            echo '<div>' . $invoice->client_address_1 . '</div>';
+        }
+        if ($invoice->client_address_2) {
+            echo '<div>' . $invoice->client_address_2 . '</div>';
+        }
+        if ($invoice->client_city && $invoice->client_zip) {
+            echo '<div>' . $invoice->client_zip . ' - ' . $invoice->client_city;
+        } else {
+            if ($invoice->client_city) {
+                echo '<div>' . $invoice->client_city;
+            }
+            if ($invoice->client_zip) {
+                echo '<div>' . $invoice->client_zip;
+            }
+        }
+        if ($invoice->client_state) {
+            echo ' (' . $invoice->client_state . ')</div>';
+        } else {
+            echo '</div>';
+        }
+
+        /*if ($invoice->client_country) {
+            echo '<div>' . get_country_name(trans('cldr'), $invoice->client_country) . '</div>';
+        }*/
+
+        if ($invoice->client_vat_id) {
+            echo '<div>' . trans('vat_id_short') . ': ' . $invoice->client_vat_id . '</div>';
+        }
+        if ($invoice->client_tax_code) {
+            echo '<div>' . trans('tax_code_short') . ': ' . $invoice->client_tax_code . '</div>';
+        }
+
+        echo '<br/>';
+
+        if ($invoice->client_phone) {
+            echo '<div>' . trans('phone_abbr') . ': ' . $invoice->client_phone . '</div>';
+        } ?>
 
     </div>
 
@@ -52,51 +105,6 @@
                 <td><strong><?php echo date_from_mysql($invoice->invoice_date_created, true); ?></strong></td>
             </tr>
         </table>
-    </div>
-    
-    <div class="clearfix"></div>
-    <br>
-    <br>
-    <div id="client">
-        <span class="th-small-title">Spett.le ditta</span>
-        <div>
-            <b><?php echo $invoice->client_name; ?></b>
-        </div>
-        <?php if ($invoice->client_vat_id) {
-            echo '<div>' . trans('vat_id_short') . ': ' . $invoice->client_vat_id . '</div>';
-        }
-        if ($invoice->client_tax_code) {
-            echo '<div>' . trans('tax_code_short') . ': ' . $invoice->client_tax_code . '</div>';
-        }
-        if ($invoice->client_address_1) {
-            echo '<div>' . $invoice->client_address_1 . '</div>';
-        }
-        if ($invoice->client_address_2) {
-            echo '<div>' . $invoice->client_address_2 . '</div>';
-        }
-        if ($invoice->client_city && $invoice->client_zip) {
-            echo '<div>' . $invoice->client_city . ' ' . $invoice->client_zip . '</div>';
-        } else {
-            if ($invoice->client_city) {
-                echo '<div>' . $invoice->client_city . '</div>';
-            }
-            if ($invoice->client_zip) {
-                echo '<div>' . $invoice->client_zip . '</div>';
-            }
-        }
-        if ($invoice->client_state) {
-            echo '<div>' . $invoice->client_state . '</div>';
-        }
-        if ($invoice->client_country) {
-            echo '<div>' . get_country_name(trans('cldr'), $invoice->client_country) . '</div>';
-        }
-
-        echo '<br/>';
-
-        if ($invoice->client_phone) {
-            echo '<div>' . trans('phone_abbr') . ': ' . $invoice->client_phone . '</div>';
-        } ?>
-
     </div>
 
     <div class="clearfix"></div>
@@ -126,8 +134,11 @@
     <table class="item-table">
         <thead>
         <tr>
+            <?php if(empty($invoice->invoice_custom_non_mostrare_quantita)): ?>
+                <th class="item-amount text-right"><?php echo trans('qty'); ?></th>
+            <?php endif; ?>
             <th class="item-desc"><?php echo trans('description'); ?></th>
-            <th class="item-amount text-right"><?php echo trans('qty'); ?></th>
+            
             
             <th class="item-price text-right"><?php echo 'Importo' ?></th>
             <th class="item-total text-right"><?php echo trans('tax_rate'); ?></th>
@@ -138,10 +149,14 @@
         <?php
         foreach ($items as $item) { ?>
             <tr>
+                <?php if(empty($invoice->invoice_custom_non_mostrare_quantita)): ?>
+                    <td class="text-right">
+                        <?php echo $item->item_price > 0 ? format_amount($item->item_quantity) : null;?>
+                    </td>
+                <?php endif; ?>
+
                 <td><?php echo $item->item_price <= 0 ? "<!--<strong>-->" : null; ?><?php echo nl2br($item->item_description); ?><?php echo $item->item_price <= 0 ? "<!--</strong>-->" : null; ?></td>
-                <td class="text-right">
-                    <?php echo $item->item_price > 0 ? format_amount($item->item_quantity) : null;?>
-                </td>
+                
                 <td class="text-right">
                     <?php echo $item->item_price > 0 ? format_currency($item->item_price) : null; ?>
                 </td>
@@ -186,12 +201,13 @@
                 echo "<tr><td>Imposta " . format_amount($tax->percent) . '%</td><td class="txt-right">' . format_currency($tax->total) . '</td></tr>';
             }
             ?>
+
             <tr>
                 <td>
-                    <strong>Totale Fattura:</strong>
+                    <br/><strong>Totale Fattura:</strong>
                 </td>
                 <td class="txt-right">
-                    <strong><?php echo format_currency($invoice->invoice_total); ?></strong>
+                    <br/><strong><?php echo format_currency($invoice->invoice_total); ?></strong>
                 </td>
             </tr>
         </table>

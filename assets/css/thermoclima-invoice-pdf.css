@@ -5,8 +5,8 @@
    ========================================================================== */
 
 #company{
-	float:left;
-	width:65%;
+	/*float:left;*/
+	width:100%;
 	/*margin-left:5%;*/
 	text-align:center;
 }
@@ -15,7 +15,7 @@
 	float: right;
 	width: 30%;
 	text-align: left;
-	margin-top: 20px;
+	margin-top: 30px;
 }
 
 .invoice-details table {
@@ -30,7 +30,8 @@
 }
 
 #client{
-	width: 100%;
+	width: 65%;
+	float: left;
 	text-align: left;
 	margin-top: 20px;
 }
@@ -92,4 +93,8 @@ footer {
 .txt-right {
 	text-align: right;
 	padding-left: 10px;
+}
+
+table.item-table{
+    font-size: 14px;
 }
