@@ -1,6 +1,9 @@
 <?php
 
     $tax_rates_array = array();
+    $show_discounts_items = false;
+    $show_discounts_invoice = false;
+
     foreach ($items as $item) {
         if($item->item_tax_total > 0){
             if(!isset($tax_rates_array[$item->item_tax_rate_id])){
@@ -12,6 +15,14 @@
             
             $tax_rates_array[$item->item_tax_rate_id]->total += $item->item_tax_total;
         }
+
+        if($item->item_discount != 0){
+            $show_discounts_items = true;
+        }
+    }
+
+    if($invoice->invoice_discount_percent != 0){
+        $show_discounts_invoice = true;
     }
 
     $CI = & get_instance();
@@ -144,6 +155,12 @@
             
             
             <th class="item-price text-right"><?php echo 'Importo' ?></th>
+
+            <?php if ($show_discounts_items) : ?>
+                <th class="item-discount text-right"><?php echo 'Sconto' ?></th>
+                <th class="item-discount text-right"><?php echo 'Totale' ?></th>
+            <?php endif; ?>
+
             <th class="item-total text-right"><?php echo trans('tax_rate'); ?></th>
         </tr>
         </thead>
@@ -158,11 +175,26 @@
                     </td>
                 <?php endif; ?>
 
+
+
                 <td><?php echo $item->item_price <= 0 ? "<!--<strong>-->" : null; ?><?php echo nl2br($item->item_description); ?><?php echo $item->item_price <= 0 ? "<!--</strong>-->" : null; ?></td>
                 
+
+
                 <td class="text-right">
                     <?php echo $item->item_price > 0 ? format_currency($item->item_price) : null; ?>
                 </td>
+
+                <?php if ($show_discounts_items) : ?>
+                    <td class="text-right">
+                        <?php echo format_currency($item->item_discount); ?>
+                    </td>
+
+                    <td class="text-right">
+                        <?php echo format_currency($item->item_total); ?>
+                    </td>
+                <?php endif; ?>
+
                 <td class="text-right">
                     <?php echo $item->item_price > 0 ? ($item->item_tax_rate_percent != NULL ? format_amount($item->item_tax_rate_percent) : '0') . '%' : null; ?>
                 </td>
@@ -193,12 +225,22 @@
         <table style="float:right">
             <tr>
                 <td>
-                    Imponibile:
+                    <?php echo $show_discounts_invoice ? 'SubTotale' : 'Imponibile:'; ?>
                 </td>
                 <td class="txt-right">
                     <?php echo format_currency($invoice->invoice_item_subtotal); ?>
                 </td>
             </tr>
+            <?php if ($show_discounts_invoice) : ?>
+            <tr>
+                <td>
+                    Sconto:
+                </td>
+                <td class="txt-right">
+                    <?php echo $invoice->invoice_discount_percent; ?> %
+                </td>
+            </tr>
+            <?php endif; ?>
             <?php
             foreach($tax_rates_array as $tax){
                 echo "<tr><td>Imposta " . format_amount($tax->percent) . '%</td><td class="txt-right">' . format_currency($tax->total) . '</td></tr>';
