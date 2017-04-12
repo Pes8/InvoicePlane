@@ -39,11 +39,6 @@
 <body>
 <header class="clearfix">
 
-    <div id="logo">
-        <?php echo invoice_logo_pdf(); ?>
-    </div>
-
-    
     <div id="company">
         <div><b><span class="logo-red">THERMOCLIMA S.N.C. d</span><span class="logo-blue">i PESSOTTO GIUSEPPE & C.</span></b></div>
         <div><span class="logo-red">RISCALDAMENTO</span> – <span class="logo-blue">CONDIZIONAMENTO</span></div>
@@ -56,7 +51,6 @@
     </div>
     
     <div class="clearfix"></div>
-    <br>
     <br>
 
     <div id="client">
