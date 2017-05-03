@@ -176,7 +176,7 @@
 
 
                 <td class="text-right">
-                    <?php echo $item->item_price > 0 ? format_currency($item->item_price) : null; ?>
+                    <?php echo $item->item_price > 0 ? format_currency($item->item_price * $item->item_quantity) : null; ?>
                 </td>
 
                 <?php if ($show_discounts_items) : ?>
