@@ -91,7 +91,7 @@ function pdf_create($html, $filename, $stream = true, $password = null, $isInvoi
             }
         }
 
-        $archived_file = UPLOADS_FOLDER . 'archive/' . date('Y-m-d') . '_' . $filename . '.pdf';
+        $archived_file = UPLOADS_FOLDER . 'archive/' . $filename . '.pdf';
         $mpdf->Output($archived_file, 'F');
 
         if ($stream) {
