@@ -16,7 +16,7 @@
 */
 $config['base_url'] = IP_URL;
 
-$config['ThermoGest_url'] = 'http://server.thermoclima.loc/GestionaleThermoclima/';
+$config['ThermoGest_url'] = 'https://pilli.termogest.cloud';
 
 /*
 |--------------------------------------------------------------------------
